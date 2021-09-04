@@ -1,20 +1,25 @@
 import { useState } from "react"
-import { useSpring, animated } from 'react-spring'
+import { animated, useTransition } from 'react-spring'
 
 export function Text() {
-    const [flip, set] = useState(false)
-    const props = useSpring({
-      to: { opacity: 1 },
-      from: { opacity: 0 },
-      reset: true,
-      reverse: flip,
-      delay: 200,
+    const [items, setitems] = useState(false)
+
+    const transition = useTransition(items, {
+        from: {opacity: 0},
+        enter: () => (next) => (
+            next({opacity: 1})
+        ),
+        leave: {opacity: 0}
     })
   
     return (
         <div>
-            <button className="text-4xl" onClick={()=>{set(!flip)}}>{flip ? 'on' : 'off'}</button>
-            <animated.h1 style={props}>hello</animated.h1>
+            <button className="text-4xl" onClick={()=>{setitems(!items)}}>{items ? 'on' : 'off'}</button>
+            {
+                transition((style, item)=> 
+                    item ? <animated.div style={style}>get</animated.div> : ''
+                )
+            }
         </div>
     )
   }
